@@ -1,0 +1,65 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Materia - Admin Template">
+    <meta name="keywords" content="materia, webapp, admin, dashboard, template, ui">
+    <meta name="author" content="solutionportal">
+    <title>Delete Farmer - Confirmation</title>
+
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'images/hyundai-logo.png' %}">
+
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/main.min.css' %}">
+</head>
+<body>
+    
+    <nav class="site-nav clearfix" role="navigation">
+				
+
+        <!-- navigation -->
+        <ul class="list-unstyled clearfix nav-list mb15">
+            <li class="active">
+                <a href="#">
+                    <i class="ion ion-monitor"></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <!-- <a>
+                    <i class="icon ion-md-cog"></i>
+                    <span class="text">Farmer Management</span>
+                </a> -->
+            </li> 
+            
+            
+        </ul> <!-- #end navigation -->
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="panel panel-default panel-hovered panel-stacked mb30">
+                    <div class="panel-heading">Confirm Deletion</div>
+                    <div class="panel-body">
+                        <h3>Are you sure you want to delete the farmer <strong>{{ spare.spare_name }}</strong>?</h3>
+                        <form action="/delete_spare/{{spare_id }}/" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                            <a href="{% url 'list_spare' %}" class="btn btn-secondary">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'scripts/vendors.js' %}"></script>
+    <script src="{% static 'scripts/app.js' %}"></script>
+</body>
+</html>

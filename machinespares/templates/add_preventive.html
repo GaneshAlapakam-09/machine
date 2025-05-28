@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="description" content="Materia - Admin Template">
+	<meta name="keywords" content="materia, webapp, admin, dashboard, template, ui">
+	<meta name="author" content="solutionportal">
+	<!-- <base href="/"> -->
+
+	<title>Spares</title>
+	
+	{% load static %}
+	<link rel="icon" type="image/x-icon" href="{% static 'images/hyundai-logo.png' %}">
+
+<!-- Font Styles -->
+<link rel="stylesheet" href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}">
+<link rel="stylesheet" href="{% static 'fonts/ionicons/css/ionicons.min.css' %}">
+
+<!-- Plugins -->
+<link rel="stylesheet" href="{% static 'styles/plugins/c3.css' %}">
+<link rel="stylesheet" href="{% static 'styles/plugins/waves.css' %}">
+<link rel="stylesheet" href="{% static 'styles/plugins/perfect_scrollbar.css' %}">
+
+<!-- CSS Stylesheets -->
+<link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'styles/main.min.css' %}">
+
+
+
+
+
+<link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+ 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300' rel='stylesheet' type='text/css'>
+
+	<!-- Match Media polyfill for IE9 -->
+	<!--[if IE 9]> <script src="scripts/ie/matchMedia.js"></script>  <![endif]--> 
+
+	
+</head>
+<body id="app" class="app off-canvas">
+	
+	<!-- header -->
+	<header class="site-head" id="site-head">
+		<ul class="list-unstyled left-elems">
+			<!-- nav trigger/collapse -->
+			<li>
+				<a href="javascript:;" class="nav-trigger icon ion-md-menu"></a>
+			</li>
+			<!-- #end nav-trigger -->
+
+			<!-- site-logo for mobile nav -->
+			<li>
+				<div class="site-logo visible-xs">
+					<a href="javascript:;" class="text-uppercase h3">
+						<span class="text">Spare Parts</span>
+					</a>
+				</div>
+			</li> <!-- #end site-logo -->
+
+
+			
+		</ul>
+
+		<ul class="list-unstyled right-elems">
+			
+
+
+		</ul>
+
+	</header>
+	<!-- #end header -->
+
+	<!-- main-container -->
+	<div class="main-container clearfix">
+		<!-- main-navigation -->
+		<aside class="nav-wrap" id="site-nav" data-perfect-scrollbar>
+			<div class="nav-head">
+				<!-- site logo -->
+				<a class="site-logo text-uppercase">
+					{% comment %} <i class="ion ion-disc"></i> {% endcomment %}
+					<img src="{% static 'images/hyundai-logo.png' %}" alt="">
+					<span class="text">Spare Parts</span>
+				</a>
+			</div>
+
+			<!-- Site nav (vertical) -->
+
+			<nav class="site-nav clearfix" role="navigation">
+				
+
+				<!-- navigation -->
+				<ul class="list-unstyled clearfix nav-list mb15">
+					<li class="active">
+						<a href="{% url 'dashboard' %}">
+							<i class="ion ion-monitor"></i>
+							<span class="text">Dashboard</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cog"></i>
+							<span class="text">Machine Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_machine' %}">Add Machine</a></li>
+							<li><a href="{% url 'list_machine' %}">List Machine</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-construct"></i>
+							<span class="text">Spares Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_spares' %}">Add Spares</a></li>
+							<li><a href="{% url 'list_spares' %}">List Spares</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cube"></i>
+							<span class="text">Inventry Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_inward' %}">Add Inward</a></li>
+							<li><a href="{% url 'list_inward' %}">List Inward</a></li>
+							<li><a href="{% url 'list_outward' %}">List Outward</a></li>
+							<li><a href="{% url 'list_stock' %}">List Stock</a></li>
+						</ul>
+					</li>
+
+                    <li>
+						<a href="javascript:;">
+							<i class="icon ion-md-hourglass"></i>
+							<span class="text">Preventive Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_preventive' %}">Add Preventive</a></li>
+							<li><a href="{% url 'list_preventive' %}">List Preventive</a></li>
+						</ul>
+					</li>
+
+					
+					<li>
+						<a href="javascript:;"><i class="icon ion-md-paper"></i><span class="text">Report Management</span></a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'breakdown_report2' %}">BreakDown Report</a></li>
+							<li><a href="{% url 'spares_inward_report2' %}">Spares Inward Report</a></li>
+							<li><a href="{% url 'spares_outward_report2' %}">Spares Outward Report</a></li>
+							 
+						</ul>
+					</li>
+
+				</ul> <!-- #end navigation -->
+			</nav>
+
+
+		</aside>
+		<!-- #end main-navigation -->
+
+		<div class="content-container fixedHeader nav-expand">
+			<!-- col-left -->
+			<div class="col-sm-12 col-md-11">
+				<div class="panel panel-default panel-hovered panel-stacked mb30">
+					<div class="panel-heading">
+
+                        <div style="display: flex; justify-content: space-between;align-items:center  ">
+							Add Preventive
+							<a href="{% url 'list_preventive' %}" class="btn btn-primary">		
+                                    List Preventive
+                            </a>
+						</div>
+
+                    </div>
+					{% if messages %}
+
+        {% for message in messages %}
+        <script type="text/javascript">
+            alert('{{ message }}');
+        </script>
+        {% endfor %}
+        
+        {% endif %}
+        
+        
+        <div class="panel-body">
+            <form method="POST" class="form-horizontal">
+                {% csrf_token %}
+        
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Preventive ID</label>
+                    <div class="col-md-9">
+                        <input type="text" name="preventive_id" class="form-control" value="{{ new_id }}" readonly>
+                    </div>
+                </div>
+
+                <!-- Customer Details-->
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Machine Details</label>
+                    <div class="col-md-9">
+                        {% comment %} <input type="text" value="{{new_id}}" class="form-control" placeholder="Input is disabled" disabled> {% endcomment %}
+                        <input type="text" id="search" placeholder="Search here.." name = "custumer_details" class="form-control" required  autocomplete="off" />
+                        <input type="hidden" id="machine_hidden" name="machine_hidden">
+                        <div id="autocomplete-list" class="autocomplete-items"></div>
+                    </div>
+                </div>
+        
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Type of Work</label>
+                    <div class="col-md-9">
+                        <input type="text" name="type_of_work" class="form-control" placeholder="e.g. Lubrication" required>
+                    </div>
+                </div>
+        
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Type of Cycle</label>
+                    <div class="col-md-9">
+                        <select name="work_cycle" class="form-control" required>
+                            <option value="" disabled selected>Select Mode</option>
+                            <option value="Day">Dailly</option>
+                            <option value="Week">Weekly</option>
+                            <option value="Month">Monthly</option>
+                        </select>
+                    </div>
+                </div>
+                
+        
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Add Preventive Work</button>
+                </div>
+            </form>
+        </div>
+        
+        </div>
+				<!-- #end col-left -->
+
+		
+
+		<!-- content-here -->
+		<div class="content-container" id="content">
+			<!-- dashboard page -->
+			<div class="page page-dashboard">
+
+				<div class="page-wrap">
+
+
+					
+
+				</div> <!-- #end page-wrap -->
+			</div>
+			<!-- #end dashboard page -->
+		</div>
+
+		
+	</div> <!-- #end main-container -->
+	
+
+	<!-- theme settings -->
+	<div class="site-settings clearfix hidden-xs" >
+		<div class="settings clearfix">
+			<div class="trigger ion ion-settings left"></div>
+			<div class="wrapper left">
+				<ul class="list-unstyled other-settings">
+					<li class="clearfix mb10">
+						<div class="left small">Nav Horizontal</div>
+						<div class="md-switch right">
+							<label>
+								<input type="checkbox" id="navHorizontal"> 
+								<span>&nbsp;</span> 
+							</label>
+						</div>
+						
+						
+					</li>
+					<li class="clearfix mb10">
+						<div class="left small">Fixed Header</div>
+						<div class="md-switch right">
+							<label>
+								<input type="checkbox"  id="fixedHeader"> 
+								<span>&nbsp;</span> 
+							</label>
+						</div>
+					</li>
+					<li class="clearfix mb10">
+						<div class="left small">Nav Full</div>
+						<div class="md-switch right">
+							<label>
+								<input type="checkbox"  id="navFull"> 
+								<span>&nbsp;</span> 
+							</label>
+						</div>
+					</li>
+				</ul>
+				<hr/>
+				<ul class="themes list-unstyled" id="themeColor">
+					<li data-theme="theme-zero" class="active"></li>
+					<li data-theme="theme-one"></li>
+					<li data-theme="theme-two"></li>
+					<li data-theme="theme-three"></li>
+					<li data-theme="theme-four"></li>
+					<li data-theme="theme-five"></li>
+					<li data-theme="theme-six"></li>
+					<li data-theme="theme-seven"></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- #end theme settings -->
+
+
+	
+
+	<!-- Dev only -->
+	<!-- Vendors -->
+	{% load static %}
+
+	
+	<script src="{% static 'scripts/vendors.js' %}"></script>
+	<script src="{% static 'scripts/plugins/d3.min.js' %}"></script>
+	<script src="{% static 'scripts/plugins/c3.min.js' %}"></script>
+	<script src="{% static 'scripts/plugins/screenfull.js' %}"></script>
+	<script src="{% static 'scripts/plugins/perfect-scrollbar.min.js' %}"></script>
+	<script src="{% static 'scripts/plugins/waves.min.js' %}"></script>
+	<script src="{% static 'scripts/plugins/jquery.sparkline.min.js' %}"></script>
+	<script src="{% static 'scripts/plugins/jquery.easypiechart.min.js' %}"></script>
+	<script src="{% static 'scripts/plugins/bootstrap-rating.min.js' %}"></script>
+	<script src="{% static 'scripts/app.js' %}"></script>
+	<script src="{% static 'scripts/index.init.js' %}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var customerData = [
+                {% for item in data %}
+                    "{{ item.machine_id }}--{{ item.machine_name }}"{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ];
+        
+            var input = document.getElementById("search");
+            var hiddenInput = document.getElementById("machine_hidden");
+            var autocompleteList = document.getElementById("autocomplete-list");
+            var customerContainer = document.getElementById("customer-container");
+        
+            input.addEventListener("input", function () {
+                var val = this.value.trim();
+                autocompleteList.innerHTML = "";
+        
+                if (!val) return;
+        
+                var found = false;
+        
+                customerData.forEach(function (item) {
+                    if (item.toLowerCase().includes(val.toLowerCase())) {
+                        found = true;
+                        var suggestion = document.createElement("div");
+                        suggestion.textContent = item;
+                        suggestion.style.cursor = "pointer";
+                        suggestion.classList.add("autocomplete-item");
+        
+                        suggestion.addEventListener("click", function () {
+                            input.value = item;
+                            hiddenInput.value = item;  // Set hidden input value
+                            autocompleteList.innerHTML = "";
+        
+                            var parts = item.split("--");
+                            if (parts.length === 3) {
+                                var customerId = parts[0];
+                                var customerName = parts[1];
+                                var phoneNo = parts[2];
+        
+                                customerContainer.innerHTML = `
+                                    <div>
+                                        <h2>Customer Details</h2>
+                                        <p><strong>Customer ID:</strong> ${customerId}</p>
+                                        <p><strong>Name:</strong> ${customerName}</p>
+                                        <p><strong>Phone No:</strong> ${phoneNo}</p>
+                                    </div>
+                                `;
+                            }
+                        });
+        
+                        autocompleteList.appendChild(suggestion);
+                    }
+                });
+        
+                if (!found) {
+                    alert("No matching customer found.");
+                }
+            });
+        
+            document.addEventListener("click", function (e) {
+                if (!input.contains(e.target) && !autocompleteList.contains(e.target)) {
+                    autocompleteList.innerHTML = "";
+                }
+            });
+        
+        });
+        
+    </script>
+
+</body>
+</html>

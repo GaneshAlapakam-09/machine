@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="description" content="Materia - Admin Template">
+	<meta name="keywords" content="materia, webapp, admin, dashboard, template, ui">
+	<meta name="author" content="solutionportal">
+	<!-- <base href="/"> -->
+
+	<title>Overall Details</title>
+	
+
+
+
+
+
+{% load static %}
+<link rel="icon" type="image/x-icon" href="{% static 'images/hyundai-logo.png' %}">
+
+<!-- Icons -->
+<link rel="stylesheet" href="{% static 'fonts/ionicons/css/ionicons.min.css' %}">
+<link rel="stylesheet" href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}">
+
+<!-- Plugins -->
+<link rel="stylesheet" href="{% static 'styles/plugins/waves.css' %}">
+<link rel="stylesheet" href="{% static 'styles/plugins/perfect-scrollbar.css' %}">
+
+<!-- CSS Stylesheets -->
+<link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'styles/main.min.css' %}">
+
+
+
+
+
+
+<link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+ 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300' rel='stylesheet' type='text/css'>
+
+	<!-- Match Media polyfill for IE9 -->
+	<!--[if IE 9]> <script src="scripts/ie/matchMedia.js"></script>  <![endif]-->
+    <style>
+        h3 {
+            margin-top: 40px;
+            font-weight: 600;
+            font-size: 24px;
+            color: #333;
+            border-bottom: 2px solidrgb(71, 168, 86);
+            padding-bottom: 10px;
+        }
+    
+        .table {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+    
+        .table th {
+            background-color:rgb(90, 142, 194);
+            color: white;
+            font-weight: 600;
+            text-align: center;
+        }
+    
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+            font-size: 15px;
+        }
+    
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 500;
+            font-size: 16px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+    
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+    
+        .panel-heading {
+            font-size: 26px;
+            font-weight: 700;
+            color: #343a40;
+            margin-bottom: 20px;
+            border-bottom: 3px solidrgb(26, 27, 28);
+            padding-bottom: 10px;
+        }
+    
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Roboto', sans-serif;
+        }
+    
+        .content-container {
+            padding: 30px;
+        }
+    
+        .table-bordered td,
+        .table-bordered th {
+            border: 1px solid #dee2e6 !important;
+        }
+    
+        .table td, .table th {
+            padding: 12px 16px;
+        }
+        <style>
+            h3.section-title {
+                font-size: 22px;
+                font-weight: 600;
+                color: #333;
+                margin-top: 30px;
+                margin-bottom: 15px;
+                padding: 0;
+                display: inline-block;
+                border-bottom: 2px solidrgb(36, 50, 65);
+            }
+        
+            .section-wrapper {
+                margin-top: 30px;
+            }
+        </style>
+        
+    </style>  
+
+	
+</head>
+<body id="app" class="app off-canvas">
+	
+	<!-- header -->
+	<header class="site-head" id="site-head">
+		<ul class="list-unstyled left-elems">
+			<!-- nav trigger/collapse -->
+			<li>
+				<a href="javascript:;" class="nav-trigger icon ion-md-menu"></a>
+			</li>
+			<!-- #end nav-trigger -->
+
+			<!-- site-logo for mobile nav -->
+			<li>
+				<div class="site-logo visible-xs">
+					<a href="javascript:;" class="text-uppercase h3">
+						<span class="text">Spares</span>
+					</a>
+				</div>
+			</li> <!-- #end site-logo -->
+
+
+			
+		</ul>
+
+		<ul class="list-unstyled right-elems">
+			
+
+
+		</ul>
+
+	</header>
+	<!-- #end header -->
+
+	<!-- main-container -->
+	<div class="main-container clearfix">
+		<!-- main-navigation -->
+		<aside class="nav-wrap" id="site-nav" data-perfect-scrollbar>
+			<div class="nav-head">
+				<!-- site logo -->
+				<a class="site-logo text-uppercase">
+					{% comment %} <i class="ion ion-disc"></i> {% endcomment %}
+					<img src="{% static 'images/hyundai-logo.png' %}" alt="">
+					<span class="text">Spare Parts</span>
+				</a>
+			</div>
+
+			<!-- Site nav (vertical) -->
+
+			<nav class="site-nav clearfix" role="navigation">
+				
+
+				<!-- navigation -->
+				<ul class="list-unstyled clearfix nav-list mb15">
+					<li class="active">
+						<a href="{% url 'dashboard' %}">
+							<i class="ion ion-monitor"></i>
+							<span class="text">Dashboard</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cog"></i>
+							<span class="text">Machine Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_machine' %}">Add Machine</a></li>
+							<li><a href="{% url 'list_machine' %}">List Machine</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-contact"></i>
+							<span class="text">Spares Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_spares' %}">Add Spares</a></li>
+							<li><a href="{% url 'list_spares' %}">List Spares</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cube"></i>
+							<span class="text">Inventry Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_inward' %}">Add Inward</a></li>
+							<li><a href="{% url 'list_inward' %}">List Inward</a></li>
+							<li><a href="{% url 'list_outward' %}">List Outward</a></li>
+							<li><a href="{% url 'list_stock' %}">List Stock</a></li>
+						</ul>
+					</li>
+
+                    <li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cube"></i>
+							<span class="text">Preventive Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_preventive' %}">Add Preventive</a></li>
+							<li><a href="{% url 'list_preventive' %}">List Preventive</a></li>
+						</ul>
+					</li>
+
+					
+					<li>
+						<a href="javascript:;"><i class="icon ion-md-paper"></i><span class="text">Report Management</span></a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'breakdown_report2' %}">BreakDown Report</a></li>
+							<li><a href="{% url 'spares_inward_report2' %}">Spares Inward Report</a></li>
+							<li><a href="{% url 'spares_outward_report2' %}">Spares Outward Report</a></li>
+							 
+						</ul>
+					</li>
+					
+
+					
+					
+				</ul> <!-- #end navigation -->
+			</nav>
+
+
+		</aside>
+
+
+        <div class="content-container fixedHeader nav-expand">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+        
+                        <div class="panel panel-lined table-responsive panel-hovered mb20 data-table" style="padding: 20px;">
+                            <div class="panel-heading d-flex justify-content-between align-items-center" style="display: flex; justify-content: space-between;">
+                                <span>Overall Details</span>
+                                <a href="{% url 'list_machine' %}" class="btn btn-primary">List Machine</a>
+                            </div>
+        
+                            <!-- Machine Details -->
+                            <h3 class="section-title">Machine Details</h3>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Machine ID</th>
+                                            <th>Name</th>
+                                            <th>Make</th>
+                                            <th>Model</th>
+                                            <th>Capacity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ machine_detail.machine_id }}</td>
+                                            <td>{{ machine_detail.machine_name }}</td>
+                                            <td>{{ machine_detail.machine_make }}</td>
+                                            <td>{{ machine_detail.machine_model }}</td>
+                                            <td>{{ machine_detail.capacity }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+        
+                            <!-- Breakdown History -->
+                            <h3 class="section-title">Breakdown History</h3>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Breakdown ID</th>
+                                            <th style="width: 200px;">Start / End Date</th>
+                                            <th>Shift</th>
+                                            <th>Cause</th>
+                                            <th>Technician</th>
+                                            <th>Operator Name</th>
+                                            <th>Action</th>
+                                          </tr>
+                                          
+                                    </thead>
+                                    <tbody>
+                                        {% for breakdown in breakdowns %}
+                                        <tr>
+                                          <td>{{ breakdown.breakdown_id }}</td>
+                                          <td style="width: 200px; white-space: nowrap;">
+                                            {% if breakdown.start_date and breakdown.end_date %}
+                                              {{ breakdown.start_date|date:"d-m-Y, g:ia" }} / {{ breakdown.end_date|date:"d-m-Y, g:ia" }}
+                                            {% else %}
+                                              Not Available
+                                            {% endif %}
+                                          </td>
+                                          
+                                          <td>{{ breakdown.shift }}</td>
+                                          <td>{{ breakdown.causes_of_breakdown }}</td>
+                                          <td>{{ breakdown.technician_attend }}</td>
+                                          <td>{{ breakdown.operator_name }}</td>
+                                          <!-- Add this inside the <tr> for each breakdown -->
+                                            <td>
+                                                {% if breakdown.breakdown_id %}
+                                                  <a href="{% url 'breakdown_detail_view' breakdown.breakdown_id %}" title="View Details">
+                                                    <i class="fa fa-info-circle"></i> Details
+                                                  </a>
+                                                {% else %}
+                                                  <span class="text-muted">No Breakdown ID</span>
+                                                {% endif %}
+                                              </td>
+                                              
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                          <td colspan="6">No breakdowns found for this machine.</td>
+                                        </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                      
+                                </table>
+                            </div>
+        
+                            <!-- Spare Parts Used -->
+                            <h3 class="section-title">Spare Parts Used</h3>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Breakdown ID</th>
+                                            <th>Spare ID</th>
+                                            <th>Spare Name</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for spare in spare_details %}
+                                        <tr>
+                                            <td>{{ spare.breakdown_id }}</td>
+                                            <td>{{ spare.spare_id }}</td>
+                                            <td>{{ spare.spare_name }}</td>
+                                            <td>{{ spare.quantity }}</td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="3" class="text-center">No spare usage found.</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Theme Settings -->
+    <div class="content-container" id="content">
+        <!-- dashboard page -->
+        <div class="page page-dashboard">
+    
+            <div class="page-wrap">
+    
+    
+                
+    
+            </div> <!-- #end page-wrap -->
+        </div>
+        <!-- #end dashboard page -->
+    </div>
+    
+    
+    </div> <!-- #end main-container -->
+    
+    
+    <!-- theme settings -->
+    <div class="site-settings clearfix hidden-xs" >
+    <div class="settings clearfix">
+        <div class="trigger ion ion-settings left"></div>
+        <div class="wrapper left">
+            <ul class="list-unstyled other-settings">
+                <li class="clearfix mb10">
+                    <div class="left small">Nav Horizontal</div>
+                    <div class="md-switch right">
+                        <label>
+                            <input type="checkbox" id="navHorizontal"> 
+                            <span>&nbsp;</span> 
+                        </label>
+                    </div>
+                    
+                    
+                </li>
+                <li class="clearfix mb10">
+                    <div class="left small">Fixed Header</div>
+                    <div class="md-switch right">
+                        <label>
+                            <input type="checkbox"  id="fixedHeader"> 
+                            <span>&nbsp;</span> 
+                        </label>
+                    </div>
+                </li>
+                <li class="clearfix mb10">
+                    <div class="left small">Nav Full</div>
+                    <div class="md-switch right">
+                        <label>
+                            <input type="checkbox"  id="navFull"> 
+                            <span>&nbsp;</span> 
+                        </label>
+                    </div>
+                </li>
+            </ul>
+            <hr/>
+            <ul class="themes list-unstyled" id="themeColor">
+                <li data-theme="theme-zero" class="active"></li>
+                <li data-theme="theme-one"></li>
+                <li data-theme="theme-two"></li>
+                <li data-theme="theme-three"></li>
+                <li data-theme="theme-four"></li>
+                <li data-theme="theme-five"></li>
+                <li data-theme="theme-six"></li>
+                <li data-theme="theme-seven"></li>
+            </ul>
+        </div>
+    </div>
+    </div>
+    <!-- #end theme settings -->
+    
+    
+    
+    
+    <!-- Dev only -->
+    <!-- Vendors -->
+    {% load static %}
+    
+    
+    <script src="{% static 'scripts/vendors.js' %}"></script>
+    <script src="{% static 'scripts/plugins/d3.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/c3.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/screenfull.js' %}"></script>
+    <script src="{% static 'scripts/plugins/perfect-scrollbar.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/waves.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/jquery.sparkline.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/jquery.easypiechart.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/bootstrap-rating.min.js' %}"></script>
+    <script src="{% static 'scripts/app.js' %}"></script>
+    <script src="{% static 'scripts/index.init.js' %}"></script>
+    
+    
+
+    {% comment %}<script src="{% static 'scripts/tables.init.js' %}"></script>{% endcomment %}
+</body>
+</html>

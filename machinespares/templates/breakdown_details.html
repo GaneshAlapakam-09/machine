@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spares</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'images/hyundai-logo.png' %}" type="image/x-icon">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/ionicons/css/ionicons.min.css' %}">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Roboto:400,500,700,300" rel="stylesheet" type="text/css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{% static 'styles/plugins/c3.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/plugins/waves.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/plugins/perfect_scrollbar.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/main.min.css' %}">
+
+    <style>
+        .btn-primary {
+            background-color: #055cb9;
+            color: white;
+            padding: 4px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background-color: #0d355f;
+        }
+        .autocomplete-items {
+            border: 1px solid #d4d4d4;
+            border-top: none;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 99;
+            position: absolute;
+            background: white;
+            width: 100%;
+        }
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+        .padding_around{
+            padding:20px;
+        }
+    </style>
+</head>
+<body id="app" class="app off-canvas">
+
+<header class="site-head" id="site-head">
+    <ul class="list-unstyled left-elems">
+        <li><a href="javascript:;" class="nav-trigger icon ion-md-menu"></a></li>
+        <li>
+            <div class="site-logo visible-xs">
+                <a href="javascript:;" class="text-uppercase h3"><span class="text">Spare Parts</span></a>
+            </div>
+        </li>
+    </ul>
+</header>
+
+<div class="main-container clearfix">
+	<aside class="nav-wrap" id="site-nav" data-perfect-scrollbar>
+			<div class="nav-head">
+				<!-- site logo -->
+				<a class="site-logo text-uppercase">
+					{% comment %} <i class="ion ion-disc"></i> {% endcomment %}
+					<img src="{% static 'images/hyundai-logo.png' %}" alt="">
+					<span class="text">Spare Parts</span>
+				</a>
+			</div>
+
+			<!-- Site nav (vertical) -->
+
+			<nav class="site-nav clearfix" role="navigation">
+				
+
+				<!-- navigation -->
+				<ul class="list-unstyled clearfix nav-list mb15">
+					<li class="active">
+						<a href="{% url 'dashboard' %}">
+							<i class="ion ion-monitor"></i>
+							<span class="text">Dashboard</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cog"></i>
+							<span class="text">Machine Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_machine' %}">Add Machine</a></li>
+							<li><a href="{% url 'list_machine' %}">List Machine</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-construct"></i>
+							<span class="text">Spares Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_spares' %}">Add Spares</a></li>
+							<li><a href="{% url 'list_spares' %}">List Spares</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cube"></i>
+							<span class="text">Inventry Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_inward' %}">Add Inward</a></li>
+							<li><a href="{% url 'list_inward' %}">List Inward</a></li>
+							<li><a href="{% url 'list_outward' %}">List Outward</a></li>
+							<li><a href="{% url 'list_stock' %}">List Stock</a></li>
+						</ul>
+					</li>
+
+                    <li>
+						<a href="javascript:;">
+							<i class="icon ion-md-hourglass"></i>
+							<span class="text">Preventive Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_preventive' %}">Add Preventive</a></li>
+							<li><a href="{% url 'list_preventive' %}">List Preventive</a></li>
+						</ul>
+					</li>
+
+					
+					<li>
+						<a href="javascript:;"><i class="icon ion-md-paper"></i><span class="text">Report Management</span></a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'breakdown_report2' %}">BreakDown Report</a></li>
+							<li><a href="{% url 'spares_inward_report2' %}">Spares Inward Report</a></li>
+							<li><a href="{% url 'spares_outward_report2' %}">Spares Outward Report</a></li>
+							 
+						</ul>
+					</li>
+
+				</ul> <!-- #end navigation -->
+			</nav>
+
+
+		</aside>
+
+    <div class="content-container fixedHeader nav-expand">
+        <div class="col-sm-12 col-md-11">
+            <div class="panel panel-default panel-hovered panel-stacked mb30 padding_around">
+                <div class="panel-heading">
+                    Add Breakdown
+
+                    <div style="float: right;">
+                        <a href="{% url 'list_machine' %}" class="btn btn-primary">List Machines</a>
+                    </div>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <script>alert('{{ message }}');</script>
+                    {% endfor %}
+                {% endif %}
+
+
+                <form id="form" class="form-horizontal" method="POST">
+                    {% csrf_token %}
+                
+                    <!-- Breakdown ID -->
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Breakdown ID</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="{{ breakdown.breakdown_id }}" readonly>
+                        </div>
+                    </div>
+                
+                    <!-- Machine Info -->
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Machine ID</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="machine_id" value="{{ machine.machine_id }}" readonly>
+                        </div>
+                    </div>
+                
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Machine Name</label>
+                        <div class="col-md-9">
+                            <input type="text" name="machine_name" value="{{ machine.machine_name }}" readonly class="form-control">
+                        </div>
+                    </div>
+                
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Machine Make</label>
+                        <div class="col-md-9">
+                            <input type="text" name="machine_make" value="{{ machine.machine_make }}" readonly class="form-control">
+                        </div>
+                    </div>
+                
+                    <!-- Breakdown Info -->
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Start Date</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="{{ breakdown.start_date|date:'d-m-Y H:i' }}" readonly>
+                        </div>
+                    </div>
+                
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">End Date</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="{{ breakdown.end_date|date:'d-m-Y H:i' }}" readonly>
+                        </div>
+                    </div>
+                
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Hours</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="{{ breakdown.hours }}" readonly>
+                        </div>
+                    </div>
+                
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Shift</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="{{ breakdown.shift }}" readonly>
+                        </div>
+                    </div>
+                
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Causes of Breakdown</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="{{ breakdown.causes_of_breakdown }}" readonly>
+                        </div>
+                    </div>
+                
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Technician Attend</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="{{ breakdown.technician_attend }}" readonly>
+                        </div>
+                    </div>
+                
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">Operator Name</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="{{ breakdown.operator_name }}" readonly>
+                        </div>
+                    </div>
+                
+                    <!-- Spare Details Table -->
+                    <h4 class="text-center mt-4">Spare Used</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Spare ID</th>
+                                <th>Spare Name</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for spare in spare_details %}
+                            <tr>
+                                <td><input type="text" class="form-control" value="{{ spare.spare_id }}" readonly></td>
+                                <td><input type="text" class="form-control" value="{{ spare.spare_name }}" readonly></td>
+                                <td><input type="text" class="form-control" value="{{ spare.quantity }}" readonly></td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center">No spare used</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                
+                    <!-- Submit Button (optional) -->
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+                
+                
+
+
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                
+
+<!-- Scripts -->
+<div class="content-container" id="content">
+    <!-- dashboard page -->
+    <div class="page page-dashboard">
+
+        <div class="page-wrap">
+
+
+            
+
+        </div> <!-- #end page-wrap -->
+    </div>
+    <!-- #end dashboard page -->
+</div>
+
+
+</div> <!-- #end main-container -->
+
+
+<!-- theme settings -->
+<div class="site-settings clearfix hidden-xs" >
+<div class="settings clearfix">
+    <div class="trigger ion ion-settings left"></div>
+    <div class="wrapper left">
+        <ul class="list-unstyled other-settings">
+            <li class="clearfix mb10">
+                <div class="left small">Nav Horizontal</div>
+                <div class="md-switch right">
+                    <label>
+                        <input type="checkbox" id="navHorizontal"> 
+                        <span>&nbsp;</span> 
+                    </label>
+                </div>
+                
+                
+            </li>
+            <li class="clearfix mb10">
+                <div class="left small">Fixed Header</div>
+                <div class="md-switch right">
+                    <label>
+                        <input type="checkbox"  id="fixedHeader"> 
+                        <span>&nbsp;</span> 
+                    </label>
+                </div>
+            </li>
+            <li class="clearfix mb10">
+                <div class="left small">Nav Full</div>
+                <div class="md-switch right">
+                    <label>
+                        <input type="checkbox"  id="navFull"> 
+                        <span>&nbsp;</span> 
+                    </label>
+                </div>
+            </li>
+        </ul>
+        <hr/>
+        <ul class="themes list-unstyled" id="themeColor">
+            <li data-theme="theme-zero" class="active"></li>
+            <li data-theme="theme-one"></li>
+            <li data-theme="theme-two"></li>
+            <li data-theme="theme-three"></li>
+            <li data-theme="theme-four"></li>
+            <li data-theme="theme-five"></li>
+            <li data-theme="theme-six"></li>
+            <li data-theme="theme-seven"></li>
+        </ul>
+    </div>
+</div>
+</div>
+<!-- #end theme settings -->
+
+
+
+
+<!-- Dev only -->
+<!-- Vendors -->
+{% load static %}
+
+
+<script src="{% static 'scripts/vendors.js' %}"></script>
+<script src="{% static 'scripts/plugins/d3.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/c3.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/screenfull.js' %}"></script>
+<script src="{% static 'scripts/plugins/perfect-scrollbar.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/waves.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/jquery.sparkline.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/jquery.easypiechart.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/bootstrap-rating.min.js' %}"></script>
+<script src="{% static 'scripts/app.js' %}"></script>
+<script src="{% static 'scripts/index.init.js' %}"></script>
+
+</body>
+</html>

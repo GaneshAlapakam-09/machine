@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SSD - Spares Outward Report</title>
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'images/hyundai-logo.png' %}">
+
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #4a6da7;
+            padding-bottom: 15px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 13px;
+        }
+
+        .data-table thead tr {
+            background-color: #4a6da7;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        /* Fixed column widths */
+        .col-outward-id { width: 100px; text-align: center; }
+        .col-machine-id { width: 100px; text-align: center; }
+        .col-machine-name { width: 120px; text-align: center; }
+        .col-spare-id { width: 80px; text-align: center; }
+        .col-spare-name { width: 80px; text-align: center; }
+        .col-purpose { width: 60px; text-align: center; }
+        .col-quantity { width: 90px; text-align: center; }
+        .col-date { width: 90px; text-align: center; }
+
+        .export-buttons {
+            margin: 20px 0;
+            text-align: right;
+        }
+
+        .btn-pdf {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+        }
+
+        .btn-excel {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #6c757d;
+            padding: 20px;
+        }
+    </style>
+    
+    <!-- Existing CSS/JS links -->
+    <link rel="stylesheet" href="{% static 'fonts/ionicons/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/main.min.css' %}">
+</head>
+<body id="content_to_export">
+    <!-- Header and navigation remains same -->
+
+    <div class="content-container fixedHeader nav-expand">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-lined panel-hovered mb20">
+                        <div class="report-header" >
+                            <h1>Spare Outward Report</h1>
+                            <p>Generated on: {{dateTime |date:"d-m-Y, h:i A" }}</p>
+
+                            <div class="export-buttons" id="spout_report">
+                                <a onclick="downloadPDF()" class="btn btn-pdf">
+                                    <i class="fas fa-file-pdf"></i> Export PDF
+                                </a>
+
+                                <a href="?download=excel" class="btn btn-excel">
+                                    <i class="fas fa-file-excel"></i> Export Excel
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-outward-id">Outward ID</th>
+                                        <th class="col-machine-id">Machine ID</th>
+                                        <th class="col-machine-name">Machine Name</th>
+                                        <th class="col-spare-id">Spare ID</th>
+                                        <th class="col-spare-name">Spare Name</th>
+                                        <th class="col-purpose">Purpose</th>
+                                        <th class="col-quantity">Quantity</th>
+                                        <th class="col-date">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for outward in outwards %}
+                                    <tr>
+                                        <td>{{ outward.breakdown_id }}</td>
+                                        <td>{{ outward.machine_id }}</td>
+                                        <td>{{ outward.machine_name }}</td>
+                                        <td>{{ outward.spare_id }}</td>
+                                        <td>{{ outward.spare_name }}</td>
+                                        <td>{{ outward.causes_of_breakdown }}</td>
+                                        <td class="col-quantity">{{ outward.quantity }}</td>
+                                        <td>{{ outward.end_date|date:"d-m-Y" }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="8" class="no-data">No outward records found</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        function downloadPDF() {
+          const exportButtons = document.getElementById("spout_report");
+          const content = document.getElementById("content_to_export");
+      
+          // Hide export buttons before PDF generation
+          exportButtons.style.display = "none";
+      
+          const opt = {
+            margin:       0,
+            filename:     'spares_outward_report.pdf',
+            image:        { type: 'jpeg', quality: 1 },
+            html2canvas:  { scale: 4 },
+            jsPDF:        { unit: 'mm', format: 'a3', orientation: 'portrait' }
+          };
+      
+          html2pdf().set(opt).from(content).save().then(() => {
+            // Show export buttons after PDF is saved
+            exportButtons.style.display = "block";
+          });
+        }
+      </script>
+
+    <!-- Rest of your existing code -->
+</body>
+</html>

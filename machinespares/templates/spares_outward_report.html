@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Materia - Admin Template">
+    <meta name="keywords" content="materia, webapp, admin, dashboard, template, ui">
+    <meta name="author" content="solutionportal">
+    <!-- <base href="/"> -->
+
+    <title>Spares Outward Report</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    {% load static %}
+
+    <link rel="icon" type="image/x-icon" href="{% static 'images/SS_LOGO.webp' %}">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'fonts/ionicons/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}">
+
+    <!-- Plugins -->
+    <link rel="stylesheet" href="{% static 'styles/plugins/waves.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/plugins/perfect-scrollbar.css' %}">
+
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/main.min.css' %}">
+
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300' rel='stylesheet' type='text/css'>
+
+    <!-- Match Media polyfill for IE9 -->
+    <!--[if IE 9]> <script src="scripts/ie/matchMedia.js"></script>  <![endif]--> 
+
+    <style>
+        .panel-heading.addbill-heading{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .logo-container {
+            position: relative;
+            width: fit-content;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .logo-text {
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .ss {
+            font-family: fantasy;
+            color: red;
+            font-size: 80px;
+            font-weight: 100;
+            line-height: 1;
+        }
+        
+        .digital {
+            font-family: fantasy;
+            color: green;
+            font-size: 80px;
+            font-weight: 100;
+            text-shadow: 2px 2px 0 #fff, -2px 2px 0 #fff, 2px -2px 0 #fff, -2px -2px 0 #fff;
+            margin-top: -10px;
+        }
+
+        .totals-section {
+            padding:10px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    
+        .totals-section h3 {
+            background: #f8f8f8;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 0 4px rgba(0,0,0,0.1);
+            margin: 0;
+            font-weight: normal;
+        }
+    
+        .totals-section h3 strong {
+            color: #333;
+        }
+    
+        .totals-section span {
+            color:rgb(0, 0, 0);
+        }
+    
+        @media print {
+            .totals-section h3 {
+                background: none;
+                box-shadow: none;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body id="app" class="app off-canvas">
+    <!-- header -->
+    <header class="site-head" id="site-head">
+        <ul class="list-unstyled left-elems">
+            <!-- nav trigger/collapse -->
+            <li>
+                <a href="javascript:;" class="nav-trigger icon ion-md-menu"></a>
+            </li>
+            <!-- #end nav-trigger -->
+
+            <!-- site-logo for mobile nav -->
+            <li>
+                <div class="site-logo visible-xs">
+                    <a href="javascript:;" class="text-uppercase h3">
+                        <span class="text">Spares</span>
+                    </a>
+                </div>
+            </li> <!-- #end site-logo -->
+        </ul>
+
+    </header>
+    <!-- #end header -->
+
+    <!-- main-container -->
+    <div class="main-container clearfix">
+        <!-- main-navigation -->
+	<aside class="nav-wrap" id="site-nav" data-perfect-scrollbar>
+			<div class="nav-head">
+				<!-- site logo -->
+				<a class="site-logo text-uppercase">
+					{% comment %} <i class="ion ion-disc"></i> {% endcomment %}
+					<img src="{% static 'images/hyundai-logo.png' %}" alt="">
+					<span class="text">Spare Parts</span>
+				</a>
+			</div>
+
+			<!-- Site nav (vertical) -->
+
+			<nav class="site-nav clearfix" role="navigation">
+				
+
+				<!-- navigation -->
+				<ul class="list-unstyled clearfix nav-list mb15">
+					<li class="active">
+						<a href="{% url 'dashboard' %}">
+							<i class="ion ion-monitor"></i>
+							<span class="text">Dashboard</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cog"></i>
+							<span class="text">Machine Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_machine' %}">Add Machine</a></li>
+							<li><a href="{% url 'list_machine' %}">List Machine</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-construct"></i>
+							<span class="text">Spares Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_spares' %}">Add Spares</a></li>
+							<li><a href="{% url 'list_spares' %}">List Spares</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cube"></i>
+							<span class="text">Inventry Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_inward' %}">Add Inward</a></li>
+							<li><a href="{% url 'list_inward' %}">List Inward</a></li>
+							<li><a href="{% url 'list_outward' %}">List Outward</a></li>
+							<li><a href="{% url 'list_stock' %}">List Stock</a></li>
+						</ul>
+					</li>
+
+                    <li>
+						<a href="javascript:;">
+							<i class="icon ion-md-hourglass"></i>
+							<span class="text">Preventive Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_preventive' %}">Add Preventive</a></li>
+							<li><a href="{% url 'list_preventive' %}">List Preventive</a></li>
+						</ul>
+					</li>
+
+					
+					<li>
+						<a href="javascript:;"><i class="icon ion-md-paper"></i><span class="text">Report Management</span></a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'breakdown_report2' %}">BreakDown Report</a></li>
+							<li><a href="{% url 'spares_inward_report2' %}">Spares Inward Report</a></li>
+							<li><a href="{% url 'spares_outward_report2' %}">Spares Outward Report</a></li>
+							 
+						</ul>
+					</li>
+
+				</ul> <!-- #end navigation -->
+			</nav>
+
+
+		</aside>
+        <!-- #end main-navigation -->
+
+        <div class="content-container fixedHeader nav-expand">
+            <!-- Data Table -->
+            <div class="col-md-11">
+                <div class="panel panel-lined table-responsive panel-hovered mb20 data-table" style="padding-bottom: 20px">
+                    <div class="panel-heading addbill-heading">
+                        <div>Spares Outward Report</div>
+                        <div style="margin-bottom: 16px;display:flex;gap:10px;align-items:center" class="no-print">
+                            <label>Start Date: <input type="date" id="startDate"></label>
+                            <label style="margin-left: 8px;">End Date: <input type="date" id="endDate"></label>
+                            <button class="btn" id="filterDate">Filter</button>
+                            <button class="btn" id="clearDate">Clear</button>
+                            <button class="btn btn-primary" id="printTable">Print</button>
+                            <button class="btn btn-primary" id="exportExcel">Export to Excel</button>
+                        </div>
+                    </div>
+                    <div class="panel-body no-print">
+                        <div class="small text-bold left mt5">
+                            Show&nbsp;
+                            <select class="lengthSelect">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select> 
+                            &nbsp;entries
+                        </div>
+
+                        <form class="form-horizontal right col-lg-4" action="javascript:;">
+                            <input type="text" class="form-control input-sm searchInput" placeholder="Type keyword">
+                        </form>
+                    </div>
+                    <table class="table table-bordered table-striped" id="outwardTable">
+                        <thead>
+                            <tr>
+                                <th class="col-outward-id">S No</th>
+                                <th class="col-outward-id">Outward ID</th>
+                                <th class="col-machine-id">Machine ID</th>
+                                <th class="col-machine-name">Machine Name</th>
+                                <th class="col-spare-id">Spare ID</th>
+                                <th class="col-spare-name">Spare Name</th>
+                                <th class="col-purpose">Purpose</th>
+                                <th class="col-quantity">Quantity</th>
+                                <th class="col-date">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in data %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ item.breakdown_id }}</td>
+                                <td>{{ item.machine_id }}</td>
+                                <td>{{ item.machine_name }}</td>
+                                <td>{{ item.spare_id }}</td>
+                                <td>{{ item.spare_name }}</td>
+                                <td>{{ item.causes_of_breakdown }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.end_date|date:"d-m-Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                                        
+                    <center class="no-print">
+                        <br>
+                        <button id="printTable2" class="btn btn-primary mr5 waves-effect">Print Table</button>
+                        <button id="exportExcel2" class="btn btn-primary mr5 waves-effect">Export to Excel</button>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div> <!-- #end main-container -->
+
+    <!-- theme settings -->
+    <div class="site-settings clearfix hidden-xs">
+        <div class="settings clearfix">
+            <div class="trigger ion ion-settings left"></div>
+            <div class="wrapper left">
+                <ul class="list-unstyled other-settings">
+                    <li class="clearfix mb10">
+                        <div class="left small">Nav Horizontal</div>
+                        <div class="md-switch right">
+                            <label>
+                                <input type="checkbox" id="navHorizontal"> 
+                                <span>&nbsp;</span> 
+                            </label>
+                        </div>
+                    </li>
+                    <li class="clearfix mb10">
+                        <div class="left small">Fixed Header</div>
+                        <div class="md-switch right">
+                            <label>
+                                <input type="checkbox"  id="fixedHeader"> 
+                                <span>&nbsp;</span> 
+                            </label>
+                        </div>
+                    </li>
+                    <li class="clearfix mb10">
+                        <div class="left small">Nav Full</div>
+                        <div class="md-switch right">
+                            <label>
+                                <input type="checkbox"  id="navFull"> 
+                                <span>&nbsp;</span> 
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+                <hr/>
+                <ul class="themes list-unstyled" id="themeColor">
+                    <li data-theme="theme-zero"></li>
+                    <li data-theme="theme-one"></li>
+                    <li data-theme="theme-two"></li>
+                    <li data-theme="theme-three" class="active"></li>
+                    <li data-theme="theme-four"></li>
+                    <li data-theme="theme-five"></li>
+                    <li data-theme="theme-six"></li>
+                    <li data-theme="theme-seven"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- #end theme settings -->
+
+    <!-- Scripts -->
+    {% load static %}
+    <script src="{% static 'scripts/vendors.js' %}"></script>
+    <script src="{% static 'scripts/plugins/screenfull.js' %}"></script>
+    <script src="{% static 'scripts/plugins/perfect-scrollbar.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/waves.min.js' %}"></script>
+    <script src="{% static 'scripts/plugins/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'scripts/app.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script> 
+
+    <script>
+        $(function () {
+            "use strict";
+
+            // Initialize DataTable
+            const table = $('#outwardTable').DataTable({
+                dom: 'rtip',
+                pageLength: 10,
+                order: [[0, "asc"]],
+                initComplete: function() {
+                    // Add date filter functionality
+                    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+                        const startDate = $('#startDate').val();
+                        const endDate = $('#endDate').val();
+                        const dateStr = data[8]; // date is the 9th column (0-indexed)
+
+                        if (!startDate && !endDate) return true;
+
+                        // Convert d-m-Y to Y-m-d for comparison
+                        const parts = dateStr.split("-");
+                        const date = new Date(parts[2], parts[1]-1, parts[0]);
+                        
+                        const start = startDate ? new Date(startDate) : null;
+                        const end = endDate ? new Date(endDate) : null;
+
+                        if (start && date < start) return false;
+                        if (end && date > end) return false;
+                        return true;
+                    });
+                }
+            });
+
+            // Date range filter trigger
+            $("#filterDate, #filterDate2").on("click", function () {
+                table.draw();
+            });
+
+            $("#clearDate, #clearDate2").on("click", function () {
+                $('#startDate').val('');
+                $('#endDate').val('');
+                table.draw();
+            });
+
+            // Global search
+            $(".searchInput").on("keyup", function () {
+                table.search(this.value).draw();
+            });
+
+            // Show entries
+            $(".lengthSelect").on("change", function () {
+                table.page.len(this.value).draw();
+            });
+
+            // Print filtered table
+            $("#printTable, #printTable2").on("click", function () {
+                const allData = table.rows({ filter: 'applied' }).data();
+                let tableHTML = `
+                    <html>
+                    <head>
+                        <title>Spares Outward Report</title>
+                        <style>
+                            @page { size: landscape; } 
+                            body { font-family: Arial; padding: 20px; } 
+                            h1 { text-align: center; margin-bottom: 20px; }
+                            table { width: 100%; border-collapse: collapse; } 
+                            th, td { border: 1px solid black; padding: 6px; text-align: left; }
+                            th { background-color: #f2f2f2; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Spares Outward Report</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Outward ID</th>
+                                    <th>Machine ID</th>
+                                    <th>Machine Name</th>
+                                    <th>Spare ID</th>
+                                    <th>Spare Name</th>
+                                    <th>Purpose</th>
+                                    <th>Quantity</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+                for (let i = 0; i < allData.length; i++) {
+                    const row = allData[i];
+                    tableHTML += `
+                        <tr>
+                            <td>${i+1}</td>
+                            <td>${row[1]}</td>
+                            <td>${row[2]}</td>
+                            <td>${row[3]}</td>
+                            <td>${row[4]}</td>
+                            <td>${row[5]}</td>
+                            <td>${row[6]}</td>
+                            <td>${row[7]}</td>
+                            <td>${row[8]}</td>
+                        </tr>`;
+                }
+
+                tableHTML += "</tbody></table></body></html>";
+
+                const win = window.open("", "", "height=700,width=900");
+                win.document.write(tableHTML);
+                win.document.close();
+                win.print();
+            });
+
+            // Clean text helper
+            function cleanText(text) {
+                return text ? String(text).replace(/(<([^>]+)>)/gi, "") : "";
+            }
+
+            // Export to Excel
+            $("#exportExcel, #exportExcel2").on("click", function () {
+                if (typeof XLSX === "undefined") {
+                    alert("XLSX library not loaded.");
+                    return;
+                }
+
+                const allData = table.rows({ filter: 'applied' }).data();
+                const headers = [
+                    "S.No", "Outward ID", "Machine ID", "Machine Name",
+                    "Spare ID", "Spare Name", "Purpose", "Quantity", "Date"
+                ];
+                const excelData = [headers];
+
+                for (let i = 0; i < allData.length; i++) {
+                    const row = allData[i];
+                    excelData.push([
+                        i+1,
+                        cleanText(row[1]),
+                        cleanText(row[2]),
+                        cleanText(row[3]),
+                        cleanText(row[4]),
+                        cleanText(row[5]),
+                        cleanText(row[6]),
+                        cleanText(row[7]),
+                        cleanText(row[8])
+                    ]);
+                }
+
+                const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Spares Outward Report");
+                XLSX.writeFile(workbook, "spares_outward_report.xlsx");
+            });
+        });
+    </script>
+</body>
+</html>

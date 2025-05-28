@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Breakdown Report</title>
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'images/hyundai-logo.png' %}">
+    
+    <!-- Simplified CSS for PDF compatibility -->
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+
+        /* Report header */
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #4a6da7;
+            padding-bottom: 15px;
+        }
+
+        /* Table styling */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            min-width: 600px;
+        }
+
+        .data-table thead tr {
+            background-color: #4a6da7;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+
+        .data-table tbody tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .data-table tbody tr:nth-of-type(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* Button styling */
+        .export-buttons {
+            margin: 20px 0;
+            text-align: right;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .btn-pdf {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-excel {
+            background-color: #28a745;
+            color: white;
+        }
+
+        /* Status messages */
+        .no-data {
+            text-align: center;
+            color: #6c757d;
+            padding: 20px;
+        }
+    </style>
+
+    
+
+</head>
+<body id="content_to_export">
+    <div class="content-container" >
+        <div class="container-fluid">
+            <div class="report-header" >
+                <h1>Breakdown Report</h1>
+                <p>Generated on: {{dateTime |date:"d-m-Y, h:i A" }}</p>
+            </div>
+
+            <div class="export-buttons" id="export_buttons">
+                <a  onclick="downloadPDF()" class="btn btn-pdf">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </a>
+                <a href="?download=excel" class="btn btn-excel">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
+            </div>
+
+            <table class="data-table table-bordered table-striped pdf-friendly-table">
+                <thead>
+                    <tr>
+                        <th style="width: 12%">Machine ID</th>
+                        <th style="width: 12%">Machine Name</th>
+                        <th style="width: 18%">Start Date/Time</th>
+                        <th style="width: 18%">End Date/Time</th>
+                        <th style="width: 10%">Duration (Hrs)</th>
+                        <th style="width: 10%">Shift</th>
+                        <th style="width: 50%">Causes of Breakdown</th>
+                        <th style="width: 12%">Technician</th>
+                        <th style="width: 12%">Operator</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for breakdown in breakdowns %}
+                    <tr>
+                        <td>{{ breakdown.machine_id }}</td>
+                        <td>{{ breakdown.machine_name }}</td>
+                        <td>{{ breakdown.start_date|date:"d-m-Y H:i" }}</td>
+                        <td>{{ breakdown.end_date|date:"d-m-Y H:i" }}</td>
+                        <td style="text-align: center;">{{ breakdown.hours|floatformat:2 }}</td>
+                        <td>{{ breakdown.shift }}</td>
+                        <td>{{ breakdown.causes_of_breakdown }}</td>
+                        <td>{{ breakdown.technician_attend }}</td>
+                        <td>{{ breakdown.operator_name }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="no-data">No breakdown records found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  function downloadPDF() {
+    const exportButtons = document.getElementById("export_buttons");
+    const content = document.getElementById("content_to_export");
+
+    // Hide export buttons before PDF generation
+    exportButtons.style.display = "none";
+
+    const opt = {
+      margin:       0,
+      filename:     'breakdown_report.pdf',
+      image:        { type: 'jpeg', quality: 1 },
+      html2canvas:  { scale: 4 },
+      jsPDF:        { unit: 'mm', format: 'a3', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(content).save().then(() => {
+      // Show export buttons after PDF is saved
+      exportButtons.style.display = "block";
+    });
+  }
+</script>
+
+
+</body>
+</html>

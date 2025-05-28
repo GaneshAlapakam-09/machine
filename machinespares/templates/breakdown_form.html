@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spares</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'images/hyundai-logo.png' %}" type="image/x-icon">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/ionicons/css/ionicons.min.css' %}">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Roboto:400,500,700,300" rel="stylesheet" type="text/css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{% static 'styles/plugins/c3.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/plugins/waves.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/plugins/perfect_scrollbar.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/main.min.css' %}">
+
+    <style>
+        .btn-primary {
+            background-color: #055cb9;
+            color: white;
+            padding: 4px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background-color: #0d355f;
+        }
+        .autocomplete-items {
+            border: 1px solid #d4d4d4;
+            border-top: none;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 99;
+            position: absolute;
+            background: white;
+            width: 100%;
+        }
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+    </style>
+</head>
+<body id="app" class="app off-canvas">
+
+<header class="site-head" id="site-head">
+    <ul class="list-unstyled left-elems">
+        <li><a href="javascript:;" class="nav-trigger icon ion-md-menu"></a></li>
+        <li>
+            <div class="site-logo visible-xs">
+                <a href="javascript:;" class="text-uppercase h3"><span class="text">Spare Parts</span></a>
+            </div>
+        </li>
+    </ul>
+</header>
+
+<div class="main-container clearfix">
+	<aside class="nav-wrap" id="site-nav" data-perfect-scrollbar>
+			<div class="nav-head">
+				<!-- site logo -->
+				<a class="site-logo text-uppercase">
+					{% comment %} <i class="ion ion-disc"></i> {% endcomment %}
+					<img src="{% static 'images/hyundai-logo.png' %}" alt="">
+					<span class="text">Spare Parts</span>
+				</a>
+			</div>
+
+			<!-- Site nav (vertical) -->
+
+			<nav class="site-nav clearfix" role="navigation">
+				
+
+				<!-- navigation -->
+				<ul class="list-unstyled clearfix nav-list mb15">
+					<li class="active">
+						<a href="{% url 'dashboard' %}">
+							<i class="ion ion-monitor"></i>
+							<span class="text">Dashboard</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cog"></i>
+							<span class="text">Machine Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_machine' %}">Add Machine</a></li>
+							<li><a href="{% url 'list_machine' %}">List Machine</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-construct"></i>
+							<span class="text">Spares Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_spares' %}">Add Spares</a></li>
+							<li><a href="{% url 'list_spares' %}">List Spares</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cube"></i>
+							<span class="text">Inventry Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_inward' %}">Add Inward</a></li>
+							<li><a href="{% url 'list_inward' %}">List Inward</a></li>
+							<li><a href="{% url 'list_outward' %}">List Outward</a></li>
+							<li><a href="{% url 'list_stock' %}">List Stock</a></li>
+						</ul>
+					</li>
+
+                    <li>
+						<a href="javascript:;">
+							<i class="icon ion-md-hourglass"></i>
+							<span class="text">Preventive Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'add_preventive' %}">Add Preventive</a></li>
+							<li><a href="{% url 'list_preventive' %}">List Preventive</a></li>
+						</ul>
+					</li>
+
+					
+					<li>
+						<a href="javascript:;"><i class="icon ion-md-paper"></i><span class="text">Report Management</span></a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url 'breakdown_report2' %}">BreakDown Report</a></li>
+							<li><a href="{% url 'spares_inward_report2' %}">Spares Inward Report</a></li>
+							<li><a href="{% url 'spares_outward_report2' %}">Spares Outward Report</a></li>
+							 
+						</ul>
+					</li>
+
+				</ul> <!-- #end navigation -->
+			</nav>
+
+
+		</aside>
+    <div class="content-container fixedHeader nav-expand">
+        <div class="col-sm-12 col-md-11">
+            <div class="panel panel-default panel-hovered panel-stacked mb30">
+                <div class="panel-heading">
+                    Add Breakdown
+
+                    <div style="float: right;">
+                        <a href="{% url 'list_machine' %}" class="btn btn-primary">List Machines</a>
+                    </div>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <script>alert('{{ message }}');</script>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="panel-body">
+                    <form id="form" class="form-horizontal" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Breakdown ID</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="breakdown_id" value="{{ new_breakdown_id }}" readonly>
+                            </div>
+                        </div>
+                        <!-- Machine Info -->
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Machine ID</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="machine_id" value="{{ machine.machine_id }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Machine Name</label>
+                            <div class="col-md-9">
+                                <input type="text" name="machine_name" value="{{ machine.machine_name }}" readonly class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Machine Make</label>
+                            <div class="col-md-9">
+                                <input type="text" name="machine_make" value="{{ machine.machine_make }}" readonly class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- Breakdown Form -->
+                        <div class="form-group">
+                            <!-- Start Date -->
+                            <label class="col-md-3 control-label">Start Date</label>
+                            <div class="col-md-9">
+                                <input type="datetime-local" name="start_date" class="form-control" id="start_date">
+                            </div>
+                        </div>
+                        
+                            <!-- End Date -->
+                        <div class="form-group">    
+                            <label class="col-md-3 control-label">End Date</label>
+                            <div class="col-md-9">
+                                <input type="datetime-local" name="end_date" class="form-control" id="end_date">
+                            </div>
+                        </div>
+                        
+                            <!-- Hours -->
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Hours</label>
+                            <div class="col-md-9">
+                                <input type="text" name="hours" placeholder="Hours" class="form-control" id="hours_diff" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Shift</label>
+                            <div class="col-md-9">
+                                <select name="shift" class="form-control" required>
+                                    <option value="" disabled selected>Select Shift</option>
+                                    <option value="Day">Day Shift</option>
+                                    <option value="Night">Night Shift</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Causes of Breakdown</label>
+                            <div class="col-md-9">
+                                <input type="text" name="causes_of_breakdown" class="form-control" placeholder="Causes of Breakdown" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Technician Attend</label>
+                            <div class="col-md-9">
+                                <input type="text" name="technician_attend" class="form-control" placeholder="Technician Attend" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Operator Name</label>
+                            <div class="col-md-9">
+                                <input type="text" name="operator_name" placeholder="Operator Name" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <!-- Spare Search -->
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Spare Details</label>
+                            <div class="col-md-9" style="position: relative;">
+                                <input type="text" id="search" name="select_spare" class="form-control" placeholder="Search spare..." autocomplete="off" required>
+                                <div id="autocomplete-list" class="autocomplete-items"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"> Out Quantity</label>
+                            <div class="col-md-9">
+                                <input type="number" name="quantity" placeholder="Out Quantity" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" id="addSpareButton">Add Spare</button>
+                        </div>
+                        
+                    </form>
+
+                    <hr>
+                    <h4>Spare Usage Details</h4>
+                    <table class="table table-bordered" id="spare-details-table">
+                        <thead>
+                            <tr>
+                                <th>Spare ID</th>
+                                <th>Spare Name</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="text-center mt-3">
+                        <button type="button" id="submitBreakdownButton" class="btn btn-primary">Submit Breakdown</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<div class="content-container" id="content">
+    <!-- dashboard page -->
+    <div class="page page-dashboard">
+
+        <div class="page-wrap">
+
+
+            
+
+        </div> <!-- #end page-wrap -->
+    </div>
+    <!-- #end dashboard page -->
+</div>
+
+
+</div> <!-- #end main-container -->
+
+
+<!-- theme settings -->
+<div class="site-settings clearfix hidden-xs" >
+<div class="settings clearfix">
+    <div class="trigger ion ion-settings left"></div>
+    <div class="wrapper left">
+        <ul class="list-unstyled other-settings">
+            <li class="clearfix mb10">
+                <div class="left small">Nav Horizontal</div>
+                <div class="md-switch right">
+                    <label>
+                        <input type="checkbox" id="navHorizontal"> 
+                        <span>&nbsp;</span> 
+                    </label>
+                </div>
+                
+                
+            </li>
+            <li class="clearfix mb10">
+                <div class="left small">Fixed Header</div>
+                <div class="md-switch right">
+                    <label>
+                        <input type="checkbox"  id="fixedHeader"> 
+                        <span>&nbsp;</span> 
+                    </label>
+                </div>
+            </li>
+            <li class="clearfix mb10">
+                <div class="left small">Nav Full</div>
+                <div class="md-switch right">
+                    <label>
+                        <input type="checkbox"  id="navFull"> 
+                        <span>&nbsp;</span> 
+                    </label>
+                </div>
+            </li>
+        </ul>
+        <hr/>
+        <ul class="themes list-unstyled" id="themeColor">
+            <li data-theme="theme-zero" class="active"></li>
+            <li data-theme="theme-one"></li>
+            <li data-theme="theme-two"></li>
+            <li data-theme="theme-three"></li>
+            <li data-theme="theme-four"></li>
+            <li data-theme="theme-five"></li>
+            <li data-theme="theme-six"></li>
+            <li data-theme="theme-seven"></li>
+        </ul>
+    </div>
+</div>
+</div>
+<!-- #end theme settings -->
+
+
+
+
+<!-- Dev only -->
+<!-- Vendors -->
+{% load static %}
+
+
+<script src="{% static 'scripts/vendors.js' %}"></script>
+<script src="{% static 'scripts/plugins/d3.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/c3.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/screenfull.js' %}"></script>
+<script src="{% static 'scripts/plugins/perfect-scrollbar.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/waves.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/jquery.sparkline.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/jquery.easypiechart.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/bootstrap-rating.min.js' %}"></script>
+<script src="{% static 'scripts/app.js' %}"></script>
+<script src="{% static 'scripts/index.init.js' %}"></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const data = [
+            {% for item in auto %}
+                "{{ item.spare_id }} --- {{ item.spare_name }}",
+            {% endfor %}
+        ];
+
+        const input = document.getElementById("search");
+        const list = document.getElementById("autocomplete-list");
+        const spareTableBody = document.querySelector("#spare-details-table tbody");
+
+        // Autocomplete
+        input.addEventListener("input", function () {
+            const val = this.value;
+            list.innerHTML = "";
+
+            if (!val) return;
+
+            data.forEach(function (item) {
+                if (item.toLowerCase().includes(val.toLowerCase())) {
+                    const div = document.createElement("div");
+                    div.textContent = item;
+                    div.onclick = function () {
+                        input.value = item;
+                        list.innerHTML = "";
+                    };
+                    list.appendChild(div);
+                }
+            });
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!input.contains(e.target) && !list.contains(e.target)) {
+                list.innerHTML = "";
+            }
+        });
+
+        // Add spare item to table (merge quantity if spare already exists)
+        document.getElementById("addSpareButton").addEventListener("click", function (e) {
+            e.preventDefault();
+            const spareInput = input.value.trim();
+            const quantityInput = document.querySelector("input[name='quantity']");
+            const quantity = quantityInput.value.trim();
+
+            if (spareInput && quantity) {
+                const [spare_id, spare_name] = spareInput.split("---").map(s => s.trim());
+
+                // Check if spare already exists in the table
+                let found = false;
+                spareTableBody.querySelectorAll("tr").forEach(row => {
+                    const rowSpareId = row.cells[0].textContent;
+                    if (rowSpareId === spare_id) {
+                        const existingQty = parseInt(row.cells[2].textContent, 10);
+                        const newQty = existingQty + parseInt(quantity, 10);
+                        row.cells[2].textContent = newQty;
+                        found = true;
+                    }
+                });
+
+                if (!found) {
+                    const row = spareTableBody.insertRow();
+                    row.insertCell(0).textContent = spare_id;
+                    row.insertCell(1).textContent = spare_name;
+                    row.insertCell(2).textContent = quantity;
+                }
+
+                input.value = "";
+                quantityInput.value = "";
+            } else {
+                alert("Please fill in both spare and quantity.");
+            }
+        });
+
+        // Submit master + details
+        document.getElementById("submitBreakdownButton").addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const form = document.getElementById("form");
+            const formData = new FormData(form);
+
+            // Gather spare table data
+            const spares = [];
+            spareTableBody.querySelectorAll("tr").forEach(row => {
+                spares.push({
+                    spare_id: row.cells[0].textContent,
+                    spare_name: row.cells[1].textContent,
+                    quantity: row.cells[2].textContent
+                });
+            });
+
+            if (spares.length === 0) {
+                alert("Please add at least one spare usage.");
+                return;
+            }
+
+            formData.append("spares", JSON.stringify(spares));
+
+            // Include breakdown_id explicitly (optional if already part of form)
+            const breakdownIdInput = document.getElementById("breakdown_id");
+            if (breakdownIdInput) {
+                formData.append("breakdown_id", breakdownIdInput.value);
+            }
+
+            fetch("", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": formData.get("csrfmiddlewaretoken")
+                },
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Breakdown successfully saved.");
+                    window.location.reload();
+                } else {
+                    return response.json().then(data => {
+                        alert(data.message || "Something went wrong.");
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+                alert("Error submitting the form.");
+            });
+        });
+    });
+</script>
+
+<script>
+    function calculateHoursDiff() {
+        const start = document.getElementById('start_date').value;
+        const end = document.getElementById('end_date').value;
+
+        if (start && end) {
+            const startDate = new Date(start);
+            const endDate = new Date(end);
+            const diffMs = endDate - startDate;
+            const diffHours = (diffMs / (1000 * 60 * 60)).toFixed(2);
+
+            document.getElementById('hours_diff').value = diffHours > 0 ? diffHours : '0';
+        }
+    }
+
+    document.getElementById('start_date').addEventListener('change', calculateHoursDiff);
+    document.getElementById('end_date').addEventListener('change', calculateHoursDiff);
+</script>
+
+    
+</body>
+</html>

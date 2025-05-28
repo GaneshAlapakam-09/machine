@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocomplete Dropdown</title>
+    
+    <style>
+        /* Style the autocomplete dropdown */
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #fff;
+            z-index: 99;
+            width: 500px;
+        }
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .autocomplete-items div:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Autocomplete Dropdown</h1>
+
+    <form action="">
+        <input type="text" id="search" placeholder="Search here.." class="form-control" style="width:500px;" autocomplete="off" />
+        <div id="autocomplete-list" class="autocomplete-items"></div>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Sample data (you will replace this with Django dynamic data)
+            var customerData = [
+                {% for item in data %}
+                    "{{ item.Customer_Name}} --- {{item.Phone_No}}",
+                {% endfor %}
+            ];
+
+            var input = document.getElementById("search");
+            var autocompleteList = document.getElementById("autocomplete-list");
+
+            input.addEventListener("input", function () {
+                var val = this.value;
+                autocompleteList.innerHTML = ""; // Clear previous results
+
+                if (!val) return; // Stop if input is empty
+
+                customerData.forEach(function (item) {
+                    if (item.toLowerCase().includes(val.toLowerCase())) {
+                        var suggestion = document.createElement("div");
+                        suggestion.textContent = item;
+                        suggestion.addEventListener("click", function () {
+                            input.value = item; // Set input value on selection
+                            autocompleteList.innerHTML = ""; // Hide dropdown
+                        });
+                        autocompleteList.appendChild(suggestion);
+                    }
+                });
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!input.contains(e.target) && !autocompleteList.contains(e.target)) {
+                    autocompleteList.innerHTML = ""; // Hide dropdown when clicking outside
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="description" content="Materia - Admin Template">
+	<meta name="keywords" content="materia, webapp, admin, dashboard, template, ui">
+	<meta name="author" content="solutionportal">
+	<!-- <base href="/"> -->
+
+	<title>Spares</title>
+	
+
+
+
+
+
+{% load static %}
+<link rel="icon" type="image/x-icon" href="{% static 'images/hyundai-logo.png' %}">
+
+<!-- Icons -->
+<link rel="stylesheet" href="{% static 'fonts/ionicons/css/ionicons.min.css' %}">
+<link rel="stylesheet" href="{% static 'fonts/font-awesome/css/font-awesome.min.css' %}">
+
+<!-- Plugins -->
+<link rel="stylesheet" href="{% static 'styles/plugins/waves.css' %}">
+<link rel="stylesheet" href="{% static 'styles/plugins/perfect-scrollbar.css' %}">
+
+<!-- CSS Stylesheets -->
+<link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'styles/main.min.css' %}">
+
+
+
+
+
+
+<link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+ 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300' rel='stylesheet' type='text/css'>
+
+	<!-- Match Media polyfill for IE9 -->
+	<!--[if IE 9]> <script src="scripts/ie/matchMedia.js"></script>  <![endif]--> 
+
+	
+</head>
+<body id="app" class="app off-canvas">
+	
+	<!-- header -->
+	<header class="site-head" id="site-head">
+		<ul class="list-unstyled left-elems">
+			<!-- nav trigger/collapse -->
+			<li>
+				<a href="javascript:;" class="nav-trigger icon ion-md-menu"></a>
+			</li>
+			<!-- #end nav-trigger -->
+
+			<!-- site-logo for mobile nav -->
+			<li>
+				<div class="site-logo visible-xs">
+					<a href="javascript:;" class="text-uppercase h3">
+						<span class="text">Spares</span>
+					</a>
+				</div>
+			</li> <!-- #end site-logo -->
+
+
+			
+		</ul>
+
+		<ul class="list-unstyled right-elems">
+			
+
+
+		</ul>
+
+	</header>
+	<!-- #end header -->
+
+	<!-- main-container -->
+	<div class="main-container clearfix">
+		<!-- main-navigation -->
+		<aside class="nav-wrap" id="site-nav" data-perfect-scrollbar>
+			<div class="nav-head">
+				<!-- site logo -->
+				<a class="site-logo text-uppercase">
+					{% comment %} <i class="ion ion-disc"></i> {% endcomment %}
+					<img src="{% static 'images/hyundai-logo.png' %}" alt="">
+					<span class="text">Spare Parts</span>
+				</a>
+			</div>
+
+			<!-- Site nav (vertical) -->
+
+			<nav class="site-nav clearfix" role="navigation">
+				
+
+				<!-- navigation -->
+				<ul class="list-unstyled clearfix nav-list mb15">
+					<li class="active">
+						<a href="{% url "dashboard" %}">
+							<i class="ion ion-monitor"></i>
+							<span class="text">Dashboard</span>
+						</a>
+					</li>
+					{% comment %} <li>
+						<a>
+							<i class="icon ion-md-cog"></i>
+							<span class="text">Customer Management</span>
+						</a>
+					</li> {% endcomment %}
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cog"></i>
+							<span class="text">Customer Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url "addcustomer" %}">Add Customer</a></li>
+							<li><a href="{% url "listcustomer" %}">List Customer</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-contact"></i>
+							<span class="text">Employee Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url "addemployee" %}">Add Employee</a></li>
+							<li><a href="{% url "listemployee" %}">List Employee</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cube"></i>
+							<span class="text">Material Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url "addmaterial" %}">Add Material</a></li>
+							<li><a href="{% url "listmaterial" %}">List Material</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-logo-dropbox"></i>
+							<span class="text">Inward Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							{% comment %} <li><a href="{% url "addmaterial" %}">Add Material</a></li> {% endcomment %}
+							<li><a href="{% url "listinward" %}">List Inward</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-albums"></i>
+							<span class="text">Product Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url "addproduct" %}">Add Product</a></li>
+							<li><a href="{% url "listproduct" %}">List Product</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-apps"></i>
+							<span class="text">Category Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url "addcategories" %}">Add Category</a></li>
+							<li><a href="{% url "listcategories" %}">List Category</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-cash"></i>
+							<span class="text">Cost Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url "addcost" %}">Add Cost</a></li>
+							<li><a href="{% url "listcost" %}">List Cost</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;">
+							<i class="icon ion-md-paper"></i>
+							<span class="text">Billing Management</span>
+							{% comment %} <i class="icon ion-md-arrow"></i> {% endcomment %}
+						</a>
+						<ul class="inner-drop list-unstyled">
+							<li><a href="{% url "bill" %}">Add Bill</a></li>
+							<li><a href="{% url "listbill" %}">List Bill</a></li>
+							<li><a href="{% url "listquote" %}">List Quotation</a></li>
+							<li><a href="{% url "listestimate" %}">List Estimation</a></li>
+						</ul>
+					</li>
+
+					
+					
+				</ul> <!-- #end navigation -->
+			</nav>
+
+
+		</aside>
+		<!-- #end main-navigation -->
+
+		<div class="content-container fixedHeader nav-expand">
+		<!-- Data Table -->
+		<div class="col-md-11">
+			<div class="panel panel-lined table-responsive panel-hovered mb20 data-table" style="padding-bottom: 20px">
+				<div class="panel-heading">Material List</div>
+				<div class="panel-body">
+					<div class="small text-bold left mt5">
+						Show&nbsp;
+						<select class="lengthSelect">
+							<option value="5">5</option>
+							<option value="10" selected>10</option>
+							<option value="20">20</option>
+							<option value="50">50</option>
+						</select> 
+						&nbsp;entries
+					</div>
+
+					<form class="form-horizontal right col-lg-4" action="javascript:;">
+						<input type="text" class="form-control input-sm searchInput" placeholder="Type keyword">
+					</form>
+				</div>
+			<!-- data table -->
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>
+							Material Id
+							<div class="th">
+								<i class="fa fa-caret-up icon-up"></i>
+								<i class="fa fa-caret-down icon-down"></i>
+							</div>
+						</th>
+						<th>
+							Material Name
+							<div class="th">
+								<i class="fa fa-caret-up icon-up"></i>
+								<i class="fa fa-caret-down icon-down"></i>
+							</div>
+						</th>
+						<th>
+							Make
+							<div class="th">
+								<i class="fa fa-caret-up icon-up"></i>
+								<i class="fa fa-caret-down icon-down"></i>
+							</div>
+						</th>
+						<th>
+							Size In Meters
+							<div class="th">
+								<i class="fa fa-caret-up icon-up"></i>
+								<i class="fa fa-caret-down icon-down"></i>
+							</div>
+						</th>
+						<th>
+							Size In Feet
+							<div class="th">
+								<i class="fa fa-caret-up icon-up"></i>
+								<i class="fa fa-caret-down icon-down"></i>
+							</div>
+						</th>
+						<th>
+							Additional Info
+							<div class="th">
+								<i class="fa fa-caret-up icon-up"></i>
+								<i class="fa fa-caret-down icon-down"></i>
+							</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in data %}
+					<tr>
+						<td>{{item.Material_Id}}</td>
+						<td>{{item.Material_Name}}</td>
+						<td>{{item.Material_Make}}</td>
+						<td>{{item.Material_Size_In_Meters}}</td>
+						<td>{{item.Material_Size_In_Feet}}</td>
+						<td>{{item.Additional_Info}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<!-- #end data table -->	
+			
+		</div>
+		</div>
+
+		<!-- content-here -->
+		<div class="content-container" id="content">
+			<!-- dashboard page -->
+			<div class="page page-dashboard">
+
+				<div class="page-wrap">
+
+
+					
+
+				</div> <!-- #end page-wrap -->
+			</div>
+			<!-- #end dashboard page -->
+		</div>
+
+		
+	</div> <!-- #end main-container -->
+	
+
+	<!-- theme settings -->
+	<div class="site-settings clearfix hidden-xs" >
+		<div class="settings clearfix">
+			<div class="trigger ion ion-settings left"></div>
+			<div class="wrapper left">
+				<ul class="list-unstyled other-settings">
+					<li class="clearfix mb10">
+						<div class="left small">Nav Horizontal</div>
+						<div class="md-switch right">
+							<label>
+								<input type="checkbox" id="navHorizontal"> 
+								<span>&nbsp;</span> 
+							</label>
+						</div>
+						
+						
+					</li>
+					<li class="clearfix mb10">
+						<div class="left small">Fixed Header</div>
+						<div class="md-switch right">
+							<label>
+								<input type="checkbox"  id="fixedHeader"> 
+								<span>&nbsp;</span> 
+							</label>
+						</div>
+					</li>
+					<li class="clearfix mb10">
+						<div class="left small">Nav Full</div>
+						<div class="md-switch right">
+							<label>
+								<input type="checkbox"  id="navFull"> 
+								<span>&nbsp;</span> 
+							</label>
+						</div>
+					</li>
+				</ul>
+				<hr/>
+				<ul class="themes list-unstyled" id="themeColor">
+					<li data-theme="theme-zero" class="active"></li>
+					<li data-theme="theme-one"></li>
+					<li data-theme="theme-two"></li>
+					<li data-theme="theme-three"></li>
+					<li data-theme="theme-four"></li>
+					<li data-theme="theme-five"></li>
+					<li data-theme="theme-six"></li>
+					<li data-theme="theme-seven"></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- #end theme settings -->
+
+
+	
+
+	<!-- Dev only -->
+	<!-- Vendors -->
+
+	{% load static %}
+
+
+	
+<script src="{% static 'scripts/vendors.js' %}"></script>
+
+
+<script src="{% static 'scripts/plugins/screenfull.js' %}"></script>
+<script src="{% static 'scripts/plugins/perfect-scrollbar.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/waves.min.js' %}"></script>
+<script src="{% static 'scripts/plugins/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'scripts/app.js' %}"></script>
+{% comment %} <script src="{% static 'scripts/tables.init.js' %}"></script> {% endcomment %}
+<script>
+	document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Stop default navigation
+
+            let userConfirmed = confirm("Are you sure you want to Delete?");
+            if (userConfirmed) {
+                // If OK is clicked, continue with the navigation
+                window.location.href = this.href;
+            }
+        });
+    });
+</script>
+	
+
+</body>
+</html>
