@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+import firebase_admin
+from firebase_admin import credentials
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,6 +30,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CORS_ALLOW_ALL_ORIGINS = True  # for testing only, restrict in production
+
 
 # Application definition
 
@@ -40,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sparesapp',
 
-    'rest_framework'
+    'rest_framework',
+    'corsheaders'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -58,12 +63,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    # 'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'machinespares.urls'
 
-CORS_ALLOW_ALL_ORIGINS = True  # or use CORS_ALLOWED_ORIGINS for specific domains
 
 TEMPLATES = [
     {
@@ -132,26 +136,30 @@ USE_TZ = True
 
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-STATIC_URL = '/machinespares/static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
 
+
+
 # Required for Django to know it's under /machinespares
-# FORCE_SCRIPT_NAME = '/machinespares'
+#FORCE_SCRIPT_NAME = '/'
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# FCM_CREDENTIALS = credentials.Certificate("/opt/machine/machinespares/hyundai-a71b1-firebase-adminsdk-fbsvc-3b750f1de9.json")

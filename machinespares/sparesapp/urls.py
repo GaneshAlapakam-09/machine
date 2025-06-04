@@ -3,6 +3,7 @@ from sparesapp import views
 
 
 urlpatterns = [
+
     path('add_machine/', views.add_machine,name='add_machine'),
     path('list_machine/', views.list_machine,name='list_machine'),
     path('add_spares/',views.add_spares,name='add_spares'),
@@ -49,7 +50,17 @@ urlpatterns = [
     path('update_breakdown/<str:id>',views.update_breakdown,name = 'update_breakdown'),
     path('api/machines/', views.machine_list_api, name='machine-list'),
     path('breakdown_adding_production_api/', views.breakdown_adding_production_api, name='breakdown_adding_production_api'),
-    # path('api/store_fcm_token/', views.store_fcm_token,name='store_fcm_token'),
+    path('send-notification/', views.send_notification_to_all_users),
+    path('api/store_fcm_token/', views.store_fcm_token, name='store_fcm_token'),
+    path('testing_notifications', views.testing_notifications, name='testing_notifications'),
+    # path('testing_2/', views.testing_2, name='testing_2'),
+    path('api/breakdowns/', views.list_outward_api, name='list_outward_api'),
+    path('api/spares/', views.spares_api, name='spares_api'),
+    path('api/breakdowns/fix/<str:id>', views.update_breakdown_api, name='update_breakdown_api'),
 
-    
+    path('api/send-location/', views.receive_location, name='send_location'),
+
+    path('api/register-face/', views.RegisterFaceView.as_view()),
+    path('api/auth-face/', views.AuthenticateFaceView.as_view()),
+
 ] 

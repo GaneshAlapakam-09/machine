@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Get and Send Location</title>
+</head>
+<body>
+
+<a href="#" onclick="getLocation()">Click to Send Location</a>
+
+<p id="output"></p>
+
+<script>
+function getLocation() {
+  const output = document.getElementById('output');
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        // Send POST request to Django backend
+        fetch('/api/send-location/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken') // Include this if CSRF protection is on
+          },
+          body: JSON.stringify({ latitude, longitude })
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+          output.textContent = 'Location sent successfully!';
+        })
+        .catch(error => {
+          output.textContent = 'Error sending location: ' + error;
+        });
+      },
+      (error) => {
+        output.textContent = 'Error getting location: ' + error.message;
+      }
+    );
+  } else {
+    output.textContent = 'Geolocation is not supported by this browser.';
+  }
+}
+
+// Get CSRF token from cookie
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Check if this cookie string begins with the name
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+</script>
+
+</body>
+</html>

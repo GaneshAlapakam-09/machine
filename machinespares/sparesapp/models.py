@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField  # Requires PostgreSQL
 
 class machine_details(models.Model):
     machine_id = models.CharField(primary_key=True, max_length=50)
@@ -202,3 +203,24 @@ class FCMToken(models.Model):
 
     def __str__(self):
         return f"{self.username} - {self.token[:20]}"
+
+class Device(models.Model):
+    token = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class location(models.Model):
+    latitude = models.CharField(max_length=50)
+    longitude = models.CharField(max_length=50)
+
+class Employee(models.Model):
+    emp_id = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.emp_id} - {self.name}"
+
+class FaceEmbedding(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='embeddings')
+    embedding = ArrayField(models.FloatField(), size=512)
+    created_at = models.DateTimeField(auto_now_add=True)

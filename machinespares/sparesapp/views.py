@@ -2,7 +2,7 @@ from io import BytesIO
 from time import localtime
 from django.shortcuts import render,redirect,HttpResponse,get_object_or_404
 import openpyxl
-from.models import UserImage, preventive_work, spare_details,inward_details,outward_details,machine_details,current_stock_data_master,current_stock_data_details,inward_masters,BreakdownDetail,BreakdownMaster,spares_add_machine,minimum_stock_quantity_master,minimum_stock_quantity_details,minimum_stocks_quantity_master,minimum_stocks_quantity_details,preventive_work_details
+from.models import Employee, FaceEmbedding, location,FCMToken,UserImage, preventive_work, spare_details,inward_details,outward_details,machine_details,current_stock_data_master,current_stock_data_details,inward_masters,BreakdownDetail,BreakdownMaster,spares_add_machine,minimum_stock_quantity_master,minimum_stock_quantity_details,minimum_stocks_quantity_master,minimum_stocks_quantity_details,preventive_work_details
 from django.db.models import Sum
 import json
 from datetime import date
@@ -22,6 +22,19 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view,parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
+
+from firebase_admin import messaging
+import firebase_config
+from zoneinfo import ZoneInfo
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+import numpy as np
+import cv2
+import insightface
+import tempfile
+import os
 
 
 # <-------- Machine Details ---------->
@@ -233,6 +246,37 @@ def list_outward(request):
     store=BreakdownMaster.objects.all()
     context={'font':store}
     return render(request,'list_breakdown.html',context)
+
+@csrf_exempt
+def list_outward_api(request):
+    if request.method == "GET":
+        machines = BreakdownMaster.objects.filter(Breakdown_Status = 1)
+        data = []
+        for m in machines:
+            data.append({
+                "breakdown_id": m.breakdown_id.strip(),
+                "start_date": m.start_date,
+                "machine_id": m.machine_id.strip(),
+                "machine_name": m.machine_name.strip(),
+                "machine_make": m.machine_make.strip(),
+                "status": m.Breakdown_Status,
+                'causes_of_breakdown': m.causes_of_breakdown.strip(),
+                'operator_name': m.operator_name.strip(),
+            })
+        return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def spares_api(request):
+    if request.method == "GET":
+        spares = current_stock_data_master.objects.filter(total_quantity__gt=0)
+        data = []
+        for spare in spares:
+            data.append({
+                "spare_id": spare.spare_id.strip(),
+                "spare_name": spare.spare_name.strip(),
+            })
+        return JsonResponse(data, safe=False)
+
 
 # <-------- Outward Details ---------->
 
@@ -463,7 +507,6 @@ def breakdown_adding_production(request, id):
 def update_breakdown(request, id):
     if request.method == "POST":
         try:
-
             # Parse spare usage
             spares_json = request.POST.get("spares")
             if not spares_json:
@@ -547,7 +590,7 @@ def update_breakdown(request, id):
             return JsonResponse({"message": str(e)}, status=500)
     # GET method (render the form)
     machine = get_object_or_404(BreakdownMaster, breakdown_id=id)
-    auto = spare_details.objects.all()
+    auto = current_stock_data_master.objects.filter(total_quantity__gt = 0)
 
     context = {
         'machine': machine,
@@ -560,7 +603,114 @@ def update_breakdown(request, id):
 
 
 
+@csrf_exempt
+def update_breakdown_api(request, id):
+    if request.method == "POST":
+        try:
+            # Extract spares data from the form fields
+            spares = []
+            index = 0
+            while True:
+                spare_id = request.POST.get(f"spares[{index}][spare_id]")
+                if not spare_id:
+                    break
+                
+                    
+                spares.append({
+                    "spare_id": spare_id,
+                    "spare_name": request.POST.get(f"spares[{index}][spare_name]"),
+                    "quantity": request.POST.get(f"spares[{index}][quantity]")
+                })
+                index += 1
 
+            if not spares:
+                return JsonResponse({"message": "No spare data received."}, status=400)
+
+            
+            # Check stock availability
+            for spare in spares:
+                spare_id = spare.get("spare_id")
+                qty_used = int(spare.get("quantity"))
+
+                stock = current_stock_data_master.objects.filter(spare_id=spare_id).first()
+                if not stock or stock.total_quantity < qty_used:
+                    return JsonResponse({"message": f"Not enough stock for spare: {spare_id}"}, status=400)
+            
+
+            # Parse start date
+            start_raw = request.POST.get("start_date", "").strip()
+            start_utc_time = datetime.fromisoformat(start_raw.replace("Z", "+00:00"))
+            start_asia_time = start_utc_time.astimezone(ZoneInfo("Asia/Kolkata"))
+
+            # Parse end date
+            end_raw = request.POST.get("end_date", "").strip()
+            end_utc_time = datetime.fromisoformat(end_raw.replace("Z", "+00:00"))
+            end_asia_time = end_utc_time.astimezone(ZoneInfo("Asia/Kolkata"))
+
+            # Calculate duration in hours
+            hours = round((end_asia_time - start_asia_time).total_seconds() / 3600, 2)
+
+            # Format if you still want to print/display
+            start_date = start_asia_time.strftime('%Y-%m-%d %H:%M')
+            end_date = end_asia_time.strftime('%Y-%m-%d %H:%M')
+            
+
+            # Update breakdown master
+            breakdown = BreakdownMaster.objects.get(breakdown_id=id)
+            breakdown.machine_id = request.POST.get("machine_id")
+            breakdown.machine_name = request.POST.get("machine_name")
+            breakdown.machine_make = request.POST.get("machine_make")
+            # breakdown.start_date = start_date
+            breakdown.end_date = end_date
+            breakdown.shift = request.POST.get("shift")
+            breakdown.causes_of_breakdown = request.POST.get("causes_of_breakdown")
+            breakdown.technician_attend = request.POST.get("technician_attend")
+            # breakdown.operator_name = request.POST.get("operator_name")
+            breakdown.hours = hours
+            breakdown.Breakdown_Status = 0
+            breakdown.save()
+
+            # Delete existing breakdown details
+            BreakdownDetail.objects.filter(breakdown_id=id).delete()
+
+            # Save new breakdown details
+            for index, spare in enumerate(spares):
+                spare_id = spare.get("spare_id")
+                spare_name = spare.get("spare_name")
+                qty_used = int(spare.get("quantity"))
+
+                image_field = request.FILES.get(f"spare_images_{index}")
+
+                BreakdownDetail.objects.create(
+                    breakdown_id=breakdown,
+                    machine_id=request.POST.get("machine_id"),
+                    machine_name=request.POST.get("machine_name"),
+                    spare_id=spare_id,
+                    spare_name=spare_name,
+                    quantity=qty_used,
+                    end_date=end_date,
+                    image=image_field,
+                    causes_of_breakdown=request.POST.get("causes_of_breakdown")
+                )
+
+                # Update stock
+                stock = current_stock_data_master.objects.get(spare_id=spare_id)
+                stock.total_quantity -= qty_used
+                stock.save()
+
+                current_stock_data_details.objects.create(
+                    spare_id=spare_id,
+                    spare_name=spare_name,
+                    type='OUTWARD',
+                    total_quantity=qty_used
+                )
+
+            return JsonResponse({"status": "success", "breakdown_id": id})
+
+        except BreakdownMaster.DoesNotExist:
+            return JsonResponse({"message": "Breakdown record not found."}, status=404)
+        except Exception as e:
+            return JsonResponse({"message": str(e)}, status=500)
 
 def overall_machine(request, machine_id):
     machine_detail = machine_details.objects.get(machine_id=machine_id)
@@ -1144,10 +1294,60 @@ def machine_list_api(request):
 
 @csrf_exempt
 @parser_classes([MultiPartParser, FormParser])
+# def breakdown_adding_production_api(request):
+#     if request.method == "POST":
+#         try:
+#             # Generate new Breakdown ID
+#             latest = BreakdownMaster.objects.order_by('-breakdown_id').first()
+#             if latest and latest.breakdown_id and latest.breakdown_id.startswith("BRK"):
+#                 try:
+#                     old_id = int(latest.breakdown_id[3:])
+#                     new_breakdown_id = f"BRK{old_id + 1:04d}"
+#                 except ValueError:
+#                     new_breakdown_id = "BRK0001"
+#             else:
+#                 new_breakdown_id = "BRK0001"
+
+#             # Parse start date
+#             start_date_str = request.POST.get("start_date")
+#             if not start_date_str:
+#                 return JsonResponse({"error": "Start date is required"}, status=400)
+            
+#             try:
+#                 start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+#             except ValueError:
+#                 try:
+#                     start_date = datetime.strptime(start_date_str, "%Y-%m-%dT%H:%M:%S")
+#                 except ValueError:
+#                     return JsonResponse({"error": "Invalid date format"}, status=400)
+
+#             # Get image (optional)
+#             image_file = request.FILES.get('image')
+
+#             # Create BreakdownMaster record
+#             master = BreakdownMaster.objects.create(
+#                 breakdown_id=new_breakdown_id,
+#                 machine_id=request.POST.get("machine_id"),
+#                 machine_name=request.POST.get("machine_name"),
+#                 machine_make=request.POST.get("machine_make"),
+#                 start_date=start_date,
+#                 shift=request.POST.get("shift"),
+#                 causes_of_breakdown=request.POST.get("causes_of_breakdown", ''),
+#                 operator_name=request.POST.get("operator_name"),
+#                 damage_image=image_file
+#             )
+#             testing_2()
+
+#             return JsonResponse({"message": "Breakdown submitted successfully", "breakdown_id": new_breakdown_id})
+
+#         except Exception as e:
+#             return JsonResponse({"error": str(e)}, status=500)
+
+#     return HttpResponse("Bad request", status=400)
+
 def breakdown_adding_production_api(request):
     if request.method == "POST":
         try:
-            # Generate new Breakdown ID
             latest = BreakdownMaster.objects.order_by('-breakdown_id').first()
             if latest and latest.breakdown_id and latest.breakdown_id.startswith("BRK"):
                 try:
@@ -1158,7 +1358,6 @@ def breakdown_adding_production_api(request):
             else:
                 new_breakdown_id = "BRK0001"
 
-            # Parse start date
             start_date_str = request.POST.get("start_date")
             if not start_date_str:
                 return JsonResponse({"error": "Start date is required"}, status=400)
@@ -1171,10 +1370,8 @@ def breakdown_adding_production_api(request):
                 except ValueError:
                     return JsonResponse({"error": "Invalid date format"}, status=400)
 
-            # Get image (optional)
             image_file = request.FILES.get('image')
 
-            # Create BreakdownMaster record
             master = BreakdownMaster.objects.create(
                 breakdown_id=new_breakdown_id,
                 machine_id=request.POST.get("machine_id"),
@@ -1187,9 +1384,248 @@ def breakdown_adding_production_api(request):
                 damage_image=image_file
             )
 
+            # 🔧 Run notification in background
+            Thread(target=testing_2).start()
+
             return JsonResponse({"message": "Breakdown submitted successfully", "breakdown_id": new_breakdown_id})
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
     return HttpResponse("Bad request", status=400)
+
+
+
+@csrf_exempt
+def send_notification_to_all_users(request):
+    if request.method == 'GET':
+        tokens = list(FCMToken.objects.values_list('token', flat=True))
+
+        if not tokens:
+            return JsonResponse({'error': 'No device tokens found'}, status=400)
+
+        # Create the notification message
+        message = messaging.MulticastMessage(
+            notification=messaging.Notification(
+                title="Machine Breakdown",
+                body="A machine has reported a breakdown. Check immediately.",
+            ),
+            tokens=tokens
+        )
+
+        # Send the notification
+        response = messaging.send_multicast(message)
+
+        return JsonResponse({
+            'success': True,
+            'success_count': response.success_count,
+            'failure_count': response.failure_count
+        })
+
+    return JsonResponse({'error': 'Only GET method allowed'}, status=405)
+    if request.method == 'GET':
+        tokens = FCMToken.objects.values_list('token', flat=True)
+        tokens = list(tokens)
+
+        if not tokens:
+            return JsonResponse({'error': 'No device tokens found'}, status=400)
+
+        message = messaging.MulticastMessage(
+            notification=messaging.Notification(
+                title="New Breakdown Alert",
+                body="A machine has reported a breakdown. Please check.",
+            ),
+            tokens=tokens,
+        )
+
+        response = messaging.send_multicast(message)
+        return JsonResponse({
+            'success_count': response.success_count,
+            'failure_count': response.failure_count
+        })
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    tokens = list(FCMToken.objects.values_list('token', flat=True))
+    if not tokens:
+        return JsonResponse({'error': 'No registered devices'}, status=400)
+
+    message = messaging.MulticastMessage(
+        notification=messaging.Notification(
+            title="General Notification",
+            body="Hello! This is a notification for all users.",
+        ),
+        tokens=tokens,
+    )
+    response = messaging.send_multicast(message)
+    return JsonResponse({'success': response.success_count, 'failure': response.failure_count})
+
+
+
+
+
+import requests
+import json
+from google.oauth2 import service_account
+import google.auth.transport.requests
+import threading
+from threading import Thread
+
+# Configuration
+SERVICE_ACCOUNT_FILE = '/opt/machine/machinespares/hyundai-486fc-firebase-adminsdk-fbsvc-a9927e955a.json'
+FCM_URL = 'https://fcm.googleapis.com/v1/projects/hyundai-486fc/messages:send'
+
+# Initialize credentials
+credentials = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE,
+    scopes=["https://www.googleapis.com/auth/cloud-platform"]
+)
+
+def testing_2():
+    Bearer = get_access_token()
+    message = {
+        "message": {
+            "topic": "all-users",
+            "notification": {
+                "title": "New Breakdown",
+                "body": "A Machine was Breakdown"
+            }
+        }
+    }
+
+    headers = {
+        'Authorization': f'Bearer {Bearer}',
+        'Content-Type': 'application/json; UTF-8',
+    }
+
+    try:
+        response = requests.post(FCM_URL, headers=headers, data=json.dumps(message))
+        if response.status_code == 200:
+            print('Notification sent successfully!')
+        else:
+            print(f"Error sending notification: {response.status_code}, {response.text}")
+    except Exception as e:
+        print(f"Exception in sending notification: {e}")
+
+
+def get_access_token():
+    """Get OAuth2 access token for FCM authentication"""
+    request = google.auth.transport.requests.Request()
+    credentials.refresh(request)
+    return credentials.token
+
+def send_fcm_notification(device_token, title="New Notification", body="This is a test push notification!"):
+    """
+    Send FCM notification to a specific device
+    
+    Args:
+        device_token (str): Valid FCM device token
+        title (str): Notification title
+        body (str): Notification body
+    """
+    # Construct the notification payload
+    message = {
+        "message": {
+            "token": device_token,
+            "notification": {
+                "title": title,
+                "body": body
+            }
+        }
+    }
+
+    # Set headers with access token
+    headers = {
+        'Authorization': f'Bearer {get_access_token()}',
+        'Content-Type': 'application/json; UTF-8',
+    }
+
+    # Send request
+    response = requests.post(FCM_URL, headers=headers, data=json.dumps(message))
+
+    # Handle response
+    if response.status_code == 200:
+        print('Notification sent successfully!')
+        return True
+    else:
+        print(f"Error sending notification: {response.status_code}, {response.text}")
+        return False
+
+# # Example usage
+# if __name__ == "__main__":
+#     # Replace with a valid FCM token from your React Native app
+#     test_device_token = "f98mC3cWSvy8nTMjw6cwCz:APA91bFqhWa38d8zQs5l9Wrlf4BjTxWx3opiqFgYCyuOBZFOtHZSlA56iot48LeN4yao8gIiwFkFYxm7njE8gmLFnzCk29wfTRLOuQw-EkdDpQthryCifGA"
+#     send_fcm_notification(
+#         device_token=test_device_token,
+#         title="Breakdown Alert",
+#         body="New machine breakdown reported!"
+#     )
+
+def testing_notifications(request):
+    test_device_token_list = list(FCMToken.objects.values_list('token', flat=True))
+    success_count = 0
+    fail_count = 0
+
+    for token in test_device_token_list:
+        result = send_fcm_notification(
+            device_token=token,
+            title="Breakdown Alert",
+            body="New machine breakdown reported!"
+        )
+        if result:
+            success_count += 1
+        else:
+            fail_count += 1
+
+    return JsonResponse({
+        "status": "completed",
+        "success_count": success_count,
+        "fail_count": fail_count
+    })
+
+
+@csrf_exempt  # Disable CSRF for this API endpoint (use with caution)
+def store_fcm_token(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            token = data.get('token')
+
+            if not username or not token:
+                return JsonResponse({'error': 'Username and token are required.'}, status=400)
+
+            # Update or create token for the username
+            obj, created = FCMToken.objects.update_or_create(
+                token=token,
+                defaults={'username': username}
+            )
+
+            return JsonResponse({'success': True, 'created': created, 'token': obj.token})
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=405)
+
+@csrf_exempt
+def receive_location(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            latitude = data.get('latitude')
+            longitude = data.get('longitude')
+            location.objects.create(latitude = latitude, longitude = longitude)
+            
+            # You can save it to the database or process it as needed
+            print("Received coordinates:", latitude, longitude)
+
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return render(request,'location.html')
+    return JsonResponse({'status': 'invalid method'}, status=405)
