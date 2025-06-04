@@ -60,7 +60,7 @@ urlpatterns = [
 
     path('api/send-location/', views.receive_location, name='send_location'),
 
-    path('api/register-face/', views.RegisterFaceView.as_view()),
-    path('api/auth-face/', views.AuthenticateFaceView.as_view()),
+    # path('api/register-face/', views.RegisterFaceView.as_view()),
+    # path('api/auth-face/', views.AuthenticateFaceView.as_view()),
 
 ] 
